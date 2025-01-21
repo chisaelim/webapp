@@ -9,7 +9,7 @@ if (isset($_POST['username']) && isset($_POST['passwd'])) {
     $passwd = $_POST['passwd'];
     if (usernameExists($username)) {
         if (logUserIn($username, $passwd)) {
-            header('Location: ./?page=home');
+            header('Location: ./?page=dashboard');
         } else {
             $passwd_err = 'Password not match';
         }

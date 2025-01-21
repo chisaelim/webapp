@@ -19,3 +19,20 @@ function logUserIn($username, $passwd)
     }
     return false;
 }
+
+
+function LoggedInUser()
+{
+    global $db;
+    if (isset($_SESSION['id_user'])) {
+        $id_user = $_SESSION['id_user'];
+        $query = $db->query("SELECT id_user, user_label FROM tbl_user WHERE id_user = '$id_user'");
+        if ($query->num_rows) {
+            return $query->fetch_object();
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}

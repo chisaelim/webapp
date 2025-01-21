@@ -5,11 +5,18 @@ include('includes/header.inc.php');
 include('includes/navbar.inc.php');
 if (isset($_GET['page'])) {
     $page = $_GET['page']; // about
-    $page_arr = ['login', 'register'];
-    if (in_array($page, $page_arr)) {
+
+    $before_login_pages = ['login', 'register'];
+    $after_login_pages = ['dashboard'];
+
+    if (
+        $page === 'logout' ||
+        (in_array($page, $before_login_pages) && !LoggedInUser()) ||
+        (in_array($page, $after_login_pages) && LoggedInUser())
+    ) {
         include('pages/' . $page . '.php');
     } else {
-        header("Location: ./");
+        header('Location: ./');
     }
 } else {
     include('pages/home.php');
