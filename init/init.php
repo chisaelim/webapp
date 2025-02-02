@@ -1,8 +1,8 @@
 <?php
 session_start();
-
-// include database connection
+//include database connection
 require_once('init/db.init.php');
-
-// include functions
+//include user functions
 require_once('func/user.func.php');
+//for manage user
+require_once('func/manage/user.manage.php');
