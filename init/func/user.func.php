@@ -22,7 +22,7 @@ function logUserIn($username, $passwd)
 }
 
 
-function loggedInUser()
+function LoggedInUser()
 {
     global $db;
     if (isset($_SESSION['id_user'])) {

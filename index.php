@@ -14,17 +14,19 @@ if (isset($_GET['page'])) {
         'user/create'
 
     ];
-    $admin_pages = ['user/home'];
+    $admin_pages = ['user/home', 'user/create'];
     $user_page = [];
     if (
         $page === 'logout'  ||
-        (in_array($page, $before_logIn_pages) && !loggedInUser()) ||
-        (in_array($page, $after_logIn_pages) && loggedInUser())
+        (in_array($page, $before_logIn_pages) && !LoggedInUser()) ||
+        (in_array($page, $after_logIn_pages) && LoggedInUser())
     ) {
         if (in_array($page, $admin_pages) && !isAdmin()) {
             header("Location: ./");
         }
         include('pages/' . $page . '.php');
+    } else {
+        header("Location: ./");
     }
 } else {
     include('pages/home.php');

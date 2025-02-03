@@ -12,6 +12,20 @@
                     <th>Level</th>
                 </tr>
                 <?php
+                //method 1
+                // $manage_users = getUsers();
+                // if ($manage_users !== null) {
+                //     while ($row = $manage_users->fetch_object()) {
+                //         echo '    <tr>
+                //                 <td>' . $row->id_user . '</td>
+                //                 <td>' . $row->user_label . '</td>
+                //                 <td>' . $row->level . '</td>
+                //                 </tr>';
+                //     }
+                // }
+                ?>
+                <?php
+                //method 2
                 $manage_users = getUsers();
                 if ($manage_users !== null) {
                     while ($row = $manage_users->fetch_object()) {
@@ -22,7 +36,6 @@
                                 </tr>';
                     }
                 }
-
                 ?>
             </table>
         </div>

@@ -1,3 +1,6 @@
+<?php
+$user = LoggedInUser();
+?>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="./">Navbar</a>
@@ -22,10 +25,10 @@
         <?php } ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <?php echo (!loggedInUser() ? 'Account' : loggedInUser()->user_label) ?>
+            <?php echo (!$user ? 'Account' : $user->user_label) ?>
           </a>
           <ul class="dropdown-menu">
-            <?php if (!loggedInUser()) { ?>
+            <?php if (!$user) { ?>
               <li><a class="dropdown-item" href="./?page=login">Login</a></li>
 
               <li>
