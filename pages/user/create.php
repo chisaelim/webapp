@@ -79,7 +79,7 @@ if (isset($_POST['user_label']) && isset($_POST['username']) && isset($_POST['pa
         </div>
     </div>
     <div class="d-flex justify-content-between">
-        <a role="button" class="btn btn-secondary">Cancel</a>
+        <a role="button" href="./?page=user/home" class="btn btn-secondary">Cancel</a>
         <button type="submit" class="btn btn-success">Create</button>
     </div>
 </form>

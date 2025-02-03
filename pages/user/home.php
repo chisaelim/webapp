@@ -10,6 +10,7 @@
                     <th>ID</th>
                     <th>User Label</th>
                     <th>Level</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 //method 1
@@ -34,6 +35,10 @@
                             <td><?php echo $row->id_user ?></td>
                             <td><?php echo $row->user_label ?></td>
                             <td><?php echo $row->level ?></td>
+                            <td>
+                                <a class="btn btn-primary" href="./?page=user/update&id=<?php echo $row->id_user ?>">update</a>
+                                <a class="btn btn-danger" href="./?page=user/delete&id=<?php echo $row->id_user ?>">delete</a>
+                            </td>
                         </tr>
                 <?php
                     }

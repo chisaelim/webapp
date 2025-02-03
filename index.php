@@ -11,10 +11,12 @@ if (isset($_GET['page'])) {
     $after_logIn_pages = [
         'dashboard',
         'user/home',
-        'user/create'
+        'user/create',
+        'user/update',
+        'user/delete',
 
     ];
-    $admin_pages = ['user/home', 'user/create'];
+    $admin_pages = ['user/home', 'user/create', 'user/update', 'user/delete'];
     $user_page = [];
     if (
         $page === 'logout'  ||
