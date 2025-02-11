@@ -14,9 +14,22 @@ if (isset($_GET['page'])) {
         'user/create',
         'user/update',
         'user/delete',
+        'category/home',
+        'category/create',
+        'category/update',
+        'category/delete',
 
     ];
-    $admin_pages = ['user/home', 'user/create', 'user/update', 'user/delete'];
+    $admin_pages = [
+        'user/home',
+        'user/create',
+        'user/update',
+        'user/delete',
+        'category/home',
+        'category/create',
+        'category/update',
+        'category/delete',
+    ];
     $user_page = [];
     if (
         $page === 'logout'  ||
