@@ -7,6 +7,10 @@ if (isset($_POST['name']) && isset($_POST['slug'])) {
 
     if (empty($name)) {
         $name_err = 'Name is required';
+    } else {
+        if (categoryNameExists($name)) {
+            $name_err = 'Name already exists';
+        }
     }
     if (empty($slug)) {
         $slug_err = 'Slug is required';

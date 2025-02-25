@@ -21,6 +21,7 @@ $user = LoggedInUser();
 
               <li><a class="dropdown-item" href="./?page=user/home">User Accouts</a></li>
               <li><a class="dropdown-item" href="./?page=category/home">Category Page</a></li>
+              <li><a class="dropdown-item" href="./?page=product/home">Product Page</a></li>
             </ul>
           </li>
         <?php } ?>

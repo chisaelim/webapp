@@ -13,10 +13,6 @@ if (isset($_POST['name']) && isset($_POST['slug'])) {
 
     if (empty($name)) {
         $name_err = 'Name is required';
-    } else {
-        if ($name !== $manage_category->name && categoryNameExists($name)) {
-            $name_err = 'Slug already exists';
-        }
     }
 
     if (empty($slug)) {

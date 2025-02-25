@@ -1,4 +1,13 @@
 <?php
+function categoryNameExists($name)
+{
+    global $db;
+    $query = $db->query("SELECT id_category FROM tbl_category WHERE name = '$name'");
+    if ($query->num_rows) {
+        return true;
+    }
+    return false;
+}
 function categorySlugExists($slug)
 {
     global $db;
