@@ -20,6 +20,10 @@ if (isset($_GET['page'])) {
         'product/create',
         'product/update',
         'product/delete',
+        'stock/home',
+        'stock/create',
+        'stock/update',
+        'stock/delete',
     ];
     $user_pages = [];
 
