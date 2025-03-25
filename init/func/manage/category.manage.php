@@ -2,8 +2,11 @@
 function categoryNameExists($name)
 {
     global $db;
-    $query = $db->query("SELECT id_category FROM tbl_category WHERE name = '$name'");
-    if ($query->num_rows) {
+    $query = $db->prepare("SELECT id_category FROM tbl_category WHERE name = ?");
+    $query->bind_param('s', $name);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
         return true;
     }
     return false;
@@ -11,8 +14,11 @@ function categoryNameExists($name)
 function categorySlugExists($slug)
 {
     global $db;
-    $query = $db->query("SELECT id_category FROM tbl_category WHERE slug = '$slug'");
-    if ($query->num_rows) {
+    $query = $db->prepare("SELECT id_category FROM tbl_category WHERE slug = ?");
+    $query->bind_param('s', $slug);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
         return true;
     }
     return false;
@@ -31,8 +37,10 @@ function getCategories()
 function createCategory($name, $slug)
 {
     global $db;
-    $query = $db->prepare("INSERT INTO tbl_category (name,slug) VALUES ('$name','$slug')");
-    if ($query->execute()) {
+    $query = $db->prepare("INSERT INTO tbl_category (name,slug) VALUES (?,?)");
+    $query->bind_param('ss', $name, $slug);
+    $query->execute();
+    if ($db->affected_rows) {
         return true;
     }
     return false;
@@ -41,9 +49,12 @@ function createCategory($name, $slug)
 function getCategoryByID($id)
 {
     global $db;
-    $query = $db->query("SELECT * FROM tbl_category WHERE id_category = '$id'");
-    if ($query->num_rows) {
-        return $query->fetch_object();
+    $query = $db->prepare("SELECT * FROM tbl_category WHERE id_category = ?");
+    $query->bind_param('i', $id);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        return $result->fetch_object();
     }
     return null;
 }
@@ -51,8 +62,9 @@ function getCategoryByID($id)
 function updateCategory($id, $name, $slug)
 {
     global $db;
-    $db->query("UPDATE tbl_category SET name = '$name', slug = '$slug' WHERE id_category = '$id'");
-    if ($db->affected_rows) {
+    $query = $db->prepare("UPDATE tbl_category SET name = ?, slug = ? WHERE id_category = ?");
+    $query->bind_param('ssi', $name, $slug, $id);
+    if ($query->execute()) {
         return getCategoryByID($id);
     }
     return false;
@@ -61,7 +73,9 @@ function updateCategory($id, $name, $slug)
 function deleteCategory($id)
 {
     global $db;
-    $db->query("DELETE FROM tbl_category WHERE id_category ='$id'");
+    $query = $db->prepare("DELETE FROM tbl_category WHERE id_category =?");
+    $query->bind_param('i', $id);
+    $query->execute();
     if ($db->affected_rows) {
         return true;
     }

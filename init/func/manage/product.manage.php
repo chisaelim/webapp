@@ -12,8 +12,11 @@ function getProducts()
 function productNameExists($name)
 {
     global $db;
-    $query = $db->query("SELECT id_product FROM tbl_product WHERE name = '$name'");
-    if ($query->num_rows) {
+    $query = $db->prepare("SELECT id_product FROM tbl_product WHERE name = ?");
+    $query->bind_param('s', $name);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
         return true;
     }
     return false;
@@ -21,8 +24,11 @@ function productNameExists($name)
 function productSlugExists($slug)
 {
     global $db;
-    $query = $db->query("SELECT id_product FROM tbl_product WHERE slug = '$slug'");
-    if ($query->num_rows) {
+    $query = $db->prepare("SELECT id_product FROM tbl_product WHERE slug = ?");
+    $query->bind_param('s', $slug);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
         return true;
     }
     return false;
@@ -34,17 +40,21 @@ function createProduct($name, $slug, $price, $short_des, $long_des, $image, $id_
     global $db;
     $db->begin_transaction();
     try {
-        $query = $db->prepare("INSERT INTO tbl_product (name,slug,price,qty,short_des,long_des,image) VALUES ('$name','$slug','$price',0,'$short_des','$long_des','$image_path')");
-        if ($query->execute()) {
+        $query = $db->prepare("INSERT INTO tbl_product (name,slug,price,qty,short_des,long_des,image) VALUES (?,?,?,0,?,?,?)");
+        $query->bind_param('ssdsss', $name, $slug, $price, $short_des, $long_des, $image_path);
+        $query->execute();
+        if ($db->affected_rows) {
             $id_product = $query->insert_id;
             foreach ($id_categories as $id_category) {
-                $query1 = $db->prepare("INSERT INTO tbl_product_category (id_category,id_product) VALUES ('$id_category','$id_product')");
+                $query1 = $db->prepare("INSERT INTO tbl_product_category (id_category,id_product) VALUES (?,?)");
+                $query1->bind_param('ii', $id_category, $id_product);
                 $query1->execute();
             }
             $db->commit();
             return true;
         }
     } catch (Exception $e) {
+        echo $e->getMessage();
         $db->rollback();
         return false;
     }
@@ -53,9 +63,12 @@ function createProduct($name, $slug, $price, $short_des, $long_des, $image, $id_
 function getProductByID($id)
 {
     global $db;
-    $query = $db->query("SELECT * FROM tbl_product WHERE id_product = '$id'");
-    if ($query->num_rows) {
-        return $query->fetch_object();
+    $query = $db->prepare("SELECT * FROM tbl_product WHERE id_product = ?");
+    $query->bind_param('i', $id);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        return $result->fetch_object();
     }
     return null;
 }
@@ -66,7 +79,9 @@ function deleteProduct($id)
 
     $product = getProductByID($id);
     // $db->query("DELETE FROM tbl_product_category WHERE id_product ='$id'");
-    $db->query("DELETE FROM tbl_product WHERE id_product ='$id'");
+    $query = $db->prepare("DELETE FROM tbl_product WHERE id_product =?");
+    $query->bind_param('i', $id);
+    $query->execute();
     if ($db->affected_rows) {
         unlink($product->image); // path + filename
         return true;
@@ -74,35 +89,21 @@ function deleteProduct($id)
     return false;
 }
 
-// function getProductCategories($id)
-// {
-//     //1 => [1, 2, 3];
-//     global $db;
-//     $query = $db->query("SELECT id_category FROM tbl_product_category WHERE id_product = '$id'");
-//     if ($query->num_rows) {
-//         while ($row = $query->fetch_object()) {
-//             $arr[] = $row->id_category;
-//         }
-//         return $arr;
-//     }
-//     return [];
-// }
-
 function getProductCategories($id)
 {
     global $db;
-    $query = $db->query("SELECT * FROM tbl_category INNER JOIN tbl_product_category ON tbl_category.id_category = tbl_product_category.id_category WHERE id_product = '$id'");
-    if ($query->num_rows) {
-        return $query;
+    $query = $db->prepare("SELECT * FROM tbl_category INNER JOIN tbl_product_category ON tbl_category.id_category = tbl_product_category.id_category WHERE id_product = ?");
+    $query->bind_param('i', $id);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        return $result;
     }
     return null;
 }
 
 function updateProduct($id, $name, $slug, $price, $short_des, $long_des, $image, $new_id_categories)
 {
-    // old [2, 5];
-    // new [1, 2, 3]
-
     $product = getProductByID($id);
     $image_path = $product->image;
 
@@ -119,21 +120,29 @@ function updateProduct($id, $name, $slug, $price, $short_des, $long_des, $image,
 
         $old_id_categories = [];
         $product_categories = getProductCategories($id);
-        while ($row = $product_categories->fetch_object()) {
-            $old_id_categories[] = $row->id_category;
+        if($product_categories !== null){
+            while ($row = $product_categories->fetch_object()) {
+                $old_id_categories[] = $row->id_category;
+            }
         }
 
-
-        $db->query("UPDATE tbl_product SET name = '$name', slug = '$slug', price = '$price', short_des = '$short_des', long_des = '$long_des', image = '$image_path' WHERE id_product = '$id'");
+        $query = $db->prepare("UPDATE tbl_product SET name = ?, slug = ?, price = ?, short_des = ?, long_des = ?, image = ? WHERE id_product = ?");
+        $query->bind_param('ssdsssi', $name, $slug, $price, $short_des, $long_des, $image_path, $id);
+        $query->execute();
 
         foreach ($old_id_categories as $old_id_category) {
             if (!in_array($old_id_category, $new_id_categories)) {
-                $db->query("DELETE FROM tbl_product_category WHERE id_product = '$id' AND id_category = '$old_id_category'");
+                $query1 = $db->prepare("DELETE FROM tbl_product_category WHERE id_product = ? AND id_category = ?");
+                $query1->bind_param('ii', $id, $old_id_category);
+                $query1->execute();
             }
         }
+
         foreach ($new_id_categories as $new_id_category) {
             if (!in_array($new_id_category, $old_id_categories)) {
-                $db->query("INSERT INTO tbl_product_category (id_product, id_category) VALUES ('$id', '$new_id_category')");
+                $query1 = $db->prepare("INSERT INTO tbl_product_category (id_product, id_category) VALUES (?, ?)");
+                $query1->bind_param('ii', $id, $new_id_category);
+                $query1->execute();
             }
         }
 

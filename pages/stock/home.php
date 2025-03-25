@@ -1,6 +1,6 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
-        <h3>Category List</h3>
+        <h3>Stock List</h3>
         <div><a href="./?page=stock/create" class="btn btn-success">Add Stock</a></div>
     </div>
     <div class="card">
@@ -11,6 +11,7 @@
                     <th>Product</th>
                     <th>Qty</th>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 $manage_stocks = getStocks();
@@ -21,6 +22,7 @@
                             <td><?php echo $row->id_stock ?></td>
                             <td><?php echo getProductByID($row->id_product)->name ?></td>
                             <td><?php echo $row->qty ?></td>
+                            <td><?php echo $row->date ?></td>
                             <td>
                                 <a class="btn btn-primary" href="./?page=stock/update&id=<?php echo $row->id_stock ?>">update</a>
                                 <a class="btn btn-danger" href="./?page=stock/delete&id=<?php echo $row->id_stock ?>">delete</a>

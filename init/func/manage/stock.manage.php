@@ -1,6 +1,4 @@
 <?php
-
-
 function getStocks()
 {
     global $db;
@@ -14,8 +12,10 @@ function getStocks()
 function createStock($id_product, $qty, $date)
 {
     global $db;
-    $query = $db->prepare("INSERT INTO tbl_stock (id_product,qty,date) VALUES ('$id_product','$qty','$date')");
-    if ($query->execute()) {
+    $query = $db->prepare("INSERT INTO tbl_stock (id_product,qty,date) VALUES (?,?,?)");
+    $query->bind_param('iis', $id_product, $qty, $date);
+    $query->execute();
+    if ($db->affected_rows) {
         return true;
     }
     return false;
@@ -24,27 +24,22 @@ function createStock($id_product, $qty, $date)
 function getStockByID($id)
 {
     global $db;
-    $query = $db->query("SELECT * FROM tbl_stock WHERE id_stock = '$id'");
-    if ($query->num_rows) {
-        return $query->fetch_object();
+    $query = $db->prepare("SELECT * FROM tbl_stock WHERE id_stock = ?");
+    $query->bind_param('i', $id);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        return $result->fetch_object();
     }
     return null;
-}
-
-function updateStock($id, $id_product, $qty, $date)
-{
-    global $db;
-    $db->query("UPDATE tbl_stock SET id_product = '$id_product', qty = '$qty', date = '$date' WHERE id_stock = '$id'");
-    if ($db->affected_rows) {
-        return getStockByID($id);
-    }
-    return false;
 }
 
 function deleteStock($id)
 {
     global $db;
-    $db->query("DELETE FROM tbl_stock WHERE id_stock ='$id'");
+    $query = $db->prepare("DELETE FROM tbl_stock WHERE id_stock = ?");
+    $query->bind_param('i', $id);
+    $query->execute();
     if ($db->affected_rows) {
         return true;
     }

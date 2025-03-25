@@ -2,9 +2,11 @@
 function usernameExists($username)
 {
     global $db;
-    $query = $db->query("SELECT id_user FROM tbl_user WHERE username = '$username'");
-    //$db->close();
-    if ($query->num_rows) {
+    $query = $db->prepare("SELECT id_user FROM tbl_user WHERE username = ?");
+    $query->bind_param('s', $username);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
         return true;
     }
     return false;
@@ -12,15 +14,16 @@ function usernameExists($username)
 function logUserIn($username, $passwd)
 {
     global $db;
-    $query = $db->query("SELECT * FROM tbl_user WHERE username = '$username' AND passwd = '$passwd'");
-    // $db->close();
-    if ($query->num_rows) {
-        $_SESSION['id_user'] = $query->fetch_object()->id_user;
+    $query = $db->prepare("SELECT * FROM tbl_user WHERE username = ? AND passwd = ?");
+    $query->bind_param('ss', $username, $passwd);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        $_SESSION['id_user'] = $result->fetch_object()->id_user;
         return true;
     }
     return false;
 }
-
 
 function LoggedInUser()
 {

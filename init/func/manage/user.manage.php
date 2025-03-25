@@ -13,8 +13,10 @@ function getUsers()
 function createUser($user_label, $username, $passwd)
 {
     global $db;
-    $query = $db->prepare("INSERT INTO tbl_user(user_label,username,passwd,level) VALUES ('$user_label','$username','$passwd','User')");
-    if ($query->execute()) {
+    $query = $db->prepare("INSERT INTO tbl_user(user_label,username,passwd,level) VALUES (?,?,?,'User')");
+    $query->bind_param('sss', $user_label, $username, $passwd);
+    $query->execute();
+    if ($db->affected_rows) {
         return true;
     }
     return false;
@@ -24,9 +26,12 @@ function createUser($user_label, $username, $passwd)
 function getUserByID($id)
 {
     global $db;
-    $query = $db->query("SELECT id_user,user_label,level FROM tbl_user WHERE id_user = '$id' AND level = 'User'");
-    if ($query->num_rows) {
-        return $query->fetch_object();
+    $query = $db->prepare("SELECT id_user,user_label,level FROM tbl_user WHERE id_user = ? AND level = 'User'");
+    $query->bind_param('i', $id);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows) {
+        return $result->fetch_object();
     }
     return null;
 }
@@ -65,7 +70,9 @@ function updateUser($id, $user_label, $username, $passwd)
 function deleteUser($id)
 {
     global $db;
-    $db->query("DELETE FROM tbl_user WHERE id_user ='$id'");
+    $query = $db->prepare("DELETE FROM tbl_user WHERE id_user =?");
+    $query->bind_param('i', $id);
+    $query->execute();
     if ($db->affected_rows) {
         return true;
     }

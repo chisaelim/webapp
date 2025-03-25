@@ -15,6 +15,7 @@
                     <th>Short Des</th>
                     <th>Image</th>
                     <th>Category</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 $manage_products = getProducts();

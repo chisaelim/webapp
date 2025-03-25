@@ -10,6 +10,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Slug</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 $manage_categories = getCategories();
