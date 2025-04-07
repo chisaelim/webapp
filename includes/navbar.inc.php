@@ -25,7 +25,24 @@ $user = LoggedInUser();
               <li><a class="dropdown-item" href="./?page=stock/home">Stock Page</a></li>
             </ul>
           </li>
-        <?php } ?>
+        <?php
+        }
+        ?>
+
+        <?php
+        if (isUser()) {
+        ?>
+          <li class="nav-item">
+            <a href="./?page=cart/home" class="btn btn-primary">
+              Cart <span class="badge text-bg-secondary">0</span>
+            </a>
+          </li>
+        <?php
+        }
+        ?>
+
+
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <?php echo (!$user ? 'Account' : $user->user_label) ?>

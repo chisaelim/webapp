@@ -47,36 +47,31 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
+</div>
 
-    <div class="container">
-        <!-- 1 -> 5 -->
-        <h1 class="my-3">featured products</h1>
-        <div class="row">
-            <?php
-            $manage_products = getProducts();
-            if ($manage_products !== null) {
-                while ($row = $manage_products->fetch_object()) {
-            ?>
-                    <div class="col-4">
-                        <div class="card" style="width: 18rem;">
-                            <img src="<?php echo $row->image ?>" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $row->name ?></h5>
-                                <p class="card-text"><?php echo $row->price ?>$</p>
-                                <p class="card-text"><?php echo $row->short_des ?></p>
-                                <a href="#" class="btn btn-primary">add to cart</a>
-                            </div>
+<div class="container">
+    <!-- 1 -> 5 -->
+    <h1 class="my-3">featured products</h1>
+    <div class="row">
+        <?php
+        $manage_products = getProducts();
+        if ($manage_products !== null) {
+            while ($row = $manage_products->fetch_object()) {
+        ?>
+                <div class="col-4">
+                    <div class="card" style="width: 18rem;">
+                        <img src="<?php echo $row->image ?>" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $row->name ?></h5>
+                            <p class="card-text"><?php echo $row->price ?>$</p>
+                            <p class="card-text"><?php echo $row->short_des ?></p>
+                            <a role="button" href="./?page=cart/create&id=<?php echo $row->id_product ?>" class="btn btn-primary">add to cart</a>
                         </div>
                     </div>
-
-            <?php
-                }
+                </div>
+        <?php
             }
-            ?>
-        </div>
+        }
+        ?>
     </div>
-
-
-
-
 </div>

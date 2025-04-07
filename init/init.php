@@ -9,3 +9,4 @@ require_once('func/manage/user.manage.php');
 require_once('func/manage/category.manage.php');
 require_once('func/manage/product.manage.php');
 require_once('func/manage/stock.manage.php');
+require_once('func/manage/cart.manage.php');

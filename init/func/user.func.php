@@ -49,8 +49,22 @@ function isAdmin()
         $query = $db->query("SELECT id_user FROM tbl_user WHERE id_user = '$id_user' AND level ='Admin'");
         if ($query->num_rows) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
+    return false;
+}
+
+function isUser()
+{
+    global $db;
+    if (isset($_SESSION['id_user'])) {
+        $id_user = $_SESSION['id_user'];
+        $query = $db->query("SELECT id_user FROM tbl_user WHERE id_user = '$id_user' AND level ='User'");
+        if ($query->num_rows) {
+            return true;
+        }
+        return false;
+    }
+    return false;
 }
