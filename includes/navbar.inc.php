@@ -34,7 +34,7 @@ $user = LoggedInUser();
         ?>
           <li class="nav-item">
             <a href="./?page=cart/home" class="btn btn-primary">
-              Cart <span class="badge text-bg-secondary">0</span>
+              Cart <span class="badge text-bg-secondary"><?php echo getPendingCartProductCount() ?></span>
             </a>
           </li>
         <?php

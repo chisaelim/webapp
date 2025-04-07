@@ -4,7 +4,7 @@ function addProductToCart($id_product)
     global $db;
     $cart = null;
     $user = LoggedInUser();
-    
+
     $query = $db->query("SELECT * FROM tbl_cart WHERE id_user = $user->id_user  AND status = 'pending'");
     if ($query->num_rows) {
         $cart = $query->fetch_object();
@@ -30,6 +30,23 @@ function addProductToCart($id_product)
         if ($db->affected_rows) {
             return true;
         }
+    }
+    return null;
+}
+
+function getPendingCartProductCount()
+{
+    global $db;
+    $query = $db->query("SELECT * FROM tbl_cart_detail INNER JOIN tbl_cart ON tbl_cart.id_cart = tbl_cart_detail.id_cart WHERE status = 'pending'");
+    return $query->num_rows;
+}
+
+function getPendingCartDetails()
+{
+    global $db;
+    $query = $db->query("SELECT * FROM tbl_cart_detail INNER JOIN tbl_cart ON tbl_cart.id_cart = tbl_cart_detail.id_cart WHERE status = 'pending'");
+    if ($query->num_rows) {
+        return $query;
     }
     return null;
 }

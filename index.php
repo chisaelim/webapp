@@ -51,6 +51,8 @@ if (isset($_GET['page'])) {
             header("Location: ./");
         }
         include('pages/' . $page . '.php');
+    } else if (in_array($page, $after_logIn_pages) && !LoggedInUser()) {
+        header("Location: ./?page=login");
     } else {
         header("Location: ./");
     }
